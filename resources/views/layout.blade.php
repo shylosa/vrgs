@@ -32,11 +32,23 @@
     <!-- /.navbar-expand-->
 </nav>
 
+<!-- content -->
 <div class="container">
     <div id="js-content">
         @yield('content')
     </div>
 </div>
+<!-- ./content -->
+
+<!-- footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="text-center">&copy; 2020 <a href="#">{{config('app.name')}}, </a>
+            Designed by <a href="#">shylosa</a>
+        </div>
+    </div>
+</footer>
+<!-- ./footer -->
 
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>

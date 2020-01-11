@@ -81,6 +81,8 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight: 400;}
 body {
     font-family: 'Arsenal', sans-serif;
     background: #F4F4F4;
+    display: flex;
+    flex-direction: column;
 }
 
 img {
@@ -158,4 +160,63 @@ div.nav {
 
 .main-header .top-menu {
     background: rgba(0, 0, 0, 0.3);
+}
+
+/* =============================.content============================== */
+
+#js-content {
+    flex: 1 1 auto;
+    padding-top: 80px;
+}
+
+.table tbody tr td a {
+    padding: 0 5px;
+    color: #5f3f3f;
+}
+
+a.add {
+    display: block;
+    padding-bottom: 15px;
+    color: #5f3f3f;
+    font-size: 18px;
+    width: 100%;
+    text-align: end;
+}
+
+a.add span {
+    color: #343a40;
+    padding-left: 5px;
+}
+
+/* =============================.pagination============================== */
+
+.page-item.active .page-link {
+    background-color: #5f3f3f;
+    border-color: #5f3f3f;
+}
+
+.page-link {
+    color: #5f3f3f;
+}
+
+.page-link:hover {
+    color: #000000;
+}
+
+/* =============================.footer============================== */
+
+.footer {
+    margin-top: auto;
+    background-color: #5f3f3f;
+    padding: 50px 0 15px 0;
+}
+
+.footer .container div{
+    color: #fff;
+}
+
+.footer .container div a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
 }

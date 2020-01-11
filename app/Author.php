@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 
 class Author extends Model
 {
@@ -54,5 +55,45 @@ class Author extends Model
     {
         $this->fill($fields);
         $this->save();
+    }
+
+    /**
+     * Get firstname
+     *
+     * @return mixed
+     */
+    public function getFirstame()
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * Get lastname
+     *
+     * @return mixed
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * Get patronymic
+     *
+     * @return mixed
+     */
+    public function getPatronymic()
+    {
+        return $this->patronymic;
+    }
+
+    /**
+     * Get author's fullname
+     *
+     * @return string
+     */
+    public function getFullname()
+    {
+        return $this->getFirstame() . ' ' . $this->getLastname() . ' ' . $this->getPatronymic();
     }
 }

@@ -29,4 +29,5 @@ mix.js('resources/js/app.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css');
 
 mix.copy('resources/assets/front/fonts', 'public/fonts');
+mix.copy('resources/assets/front/webfonts', 'public/webfonts');
 mix.copy('resources/assets/front/images', 'public/images');

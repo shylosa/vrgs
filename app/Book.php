@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class Book extends Model
 {
@@ -86,5 +87,27 @@ class Book extends Model
         return (!$this->authors->isEmpty())
             ?   implode(', ', $this->authors->pluck('author')->all())
             : 'Authors does not exist!';
+    }
+
+    /**
+     * Remove existing book
+     */
+    public function remove(): void
+    {
+        $this->removeImage();
+        try {
+            $this->delete();
+        } catch (\Exception $e) {
+        }
+    }
+
+    /**
+     * Remove image from uploads directory
+     */
+    public function removeImage()
+    {
+        if ($this->image !== null) {
+            Storage::delete('uploads/' . $this->image);
+        }
     }
 }

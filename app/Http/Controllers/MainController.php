@@ -11,13 +11,4 @@ class MainController extends Controller
         return view('main.index');
     }
 
-    public function books()
-    {
-        return view('books.index');
-    }
-
-    public function authors()
-    {
-        return view('authors.index');
-    }
 }

@@ -18,7 +18,7 @@ class CreateBooksTable extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('image')->unique();
-            $table->date('published_at');
+            $table->integer('published_at');
             $table->timestamps();
         });
     }
