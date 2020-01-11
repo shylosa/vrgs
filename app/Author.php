@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 
-class Author extends Model
+class Author extends AppModel
 {
     /**
      * The attributes that are mass assignable.
@@ -38,12 +38,15 @@ class Author extends Model
      * Add author
      *
      * @param $fields
+     * @return Author
      */
-    public function addAuthor($fields): void
+    public static function add($fields)
     {
         $author = new static();
         $author->fill($fields);
         $author->save();
+
+        return $author;
     }
 
     /**

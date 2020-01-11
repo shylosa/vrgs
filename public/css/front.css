@@ -178,7 +178,7 @@ div.nav {
 
 #js-content {
     flex: 1 1 auto;
-    padding-top: 80px;
+    margin-top: 80px;
 }
 
 .table tbody tr td a {
@@ -186,7 +186,11 @@ div.nav {
     color: #5f3f3f;
 }
 
-a.add {
+.table tbody tr td a:hover {
+    color: #0056b3;
+}
+
+button.add {
     display: block;
     padding-bottom: 15px;
     color: #5f3f3f;
@@ -195,7 +199,11 @@ a.add {
     text-align: end;
 }
 
-a.add span {
+button.add:hover {
+    text-decoration: none;
+}
+
+button.add span {
     color: #343a40;
     padding-left: 5px;
 }
