@@ -28,5 +28,6 @@ Route::get('/author/add', 'AuthorsController@create')->name('author.create');
 Route::post('/author/add', 'AuthorsController@create')->name('author.create');
 Route::get('/author/edit/{id}', 'AuthorsController@edit')->name('author.edit');
 Route::get('/author/delete/{id}', 'AuthorsController@delete')->name('author.delete');
+Route::post('/author/store', 'AuthorsController@store')->name('author.store');
 
 Route::get('/home', 'HomeController@index')->name('home');

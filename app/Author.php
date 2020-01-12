@@ -54,10 +54,21 @@ class Author extends AppModel
      *
      * @param $fields
      */
-    public function editAuthor($fields): void
+    public function edit($fields): void
     {
         $this->fill($fields);
         $this->save();
+    }
+
+    /**
+     * Remove existing author
+     */
+    public function remove(): void
+    {
+        try {
+            $this->delete();
+        } catch (\Exception $e) {
+        }
     }
 
     /**
