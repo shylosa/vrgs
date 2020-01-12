@@ -14,6 +14,8 @@ use Illuminate\View\View;
 
 class AuthorsController extends Controller
 {
+    private static $currentAuthor = ['firstname' => '', 'lastname' => '', 'patronymic' => ''];
+
     /**
      * Show author's page
      *
@@ -24,25 +26,15 @@ class AuthorsController extends Controller
     {
         $authors = DB::table('authors')->paginate(Controller::ON_PAGE);
         $startRow = AppModel::getPageNumber($request);
-        $modalTitle = 'Создание автора';
-        $currentAuthor = ['firstname' => '', 'lastname' => '', 'patronymic' => ''];
-
-        return view('authors.index', [
+        $fields = [
             'authors' => $authors,
             'startRow' => $startRow,
-            'modalTitle' => $modalTitle,
-            'currentAuthor' => $currentAuthor,
-            'id' => ''
-        ]);
-    }
+            'currentAuthor' => self::$currentAuthor,
+            'id' => ''];
 
-    /**
-     * @param Request $request
-     * @return Factory|View
-     */
-    public function create(Request $request)
-    {
-        return view('partials.form-author');
+        return ($request->ajax()) ?
+            view('partials.table-authors', $fields) :
+            view('authors.index', $fields);
     }
 
     /**
@@ -67,10 +59,11 @@ class AuthorsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Request $request
+     * @param int $id
      * @return RedirectResponse
      */
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         //Delete records in linked table
         Author::find($id)->books()->detach();

@@ -1,10 +1,14 @@
 $(function(){
+    removeAlerts();
+    var jsContent =$('#js-content');
+
     //Change title modal window
     $('.add').on('click', function (event) {
         $('#ModalLabel').text('Добавление автора');
     });
-    //Form
-    $('.js-link-edit').on('click', function (event) {
+
+    //Add and edit author's modal form
+    jsContent.on('click', '.js-link-edit', function (event) {
         event.preventDefault();
 
         $.ajax({
@@ -14,18 +18,14 @@ $(function(){
             var modalWindow = $('.modal-body');
             modalWindow.html(response);
             $('#ModalLabel').text('Изменение автора');
-            /*$('form').attr('action', '/author/update');*/
             $('#Modal').modal('show');
-
         });
-
     });
 
-    var jsContent =$('#js-content');
+    //Ajax send modal form
+   jsContent.on('submit', 'form', function (event) {
 
-    jsContent.on('submit', 'form', function (event) {
-
-        if($(this).attr('id') === 'mycontact-form') {
+        if($(this).attr('id') === 'form-author') {
             event.preventDefault();
             var uform = $(this);
 
@@ -35,8 +35,15 @@ $(function(){
                 data: uform.serialize()
             }).done(function (response) {
                 $('#js-content').html(response);
-                $('.alert, .text-danger, .invalid-feedback').delay(1000).fadeOut(1000);
+                removeAlerts();
+                $('.modal-backdrop').remove();
             });
         }
     });
+
 });
+
+//Remove alerts messages from page
+function removeAlerts() {
+    $('.alert, .text-danger, .invalid-feedback').delay(1000).fadeOut(1000);
+}

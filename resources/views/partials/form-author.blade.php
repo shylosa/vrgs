@@ -1,6 +1,6 @@
 <div class="modal-body">
   <!-- form -->
-  <form method="POST" action="/author/store">
+  <form method="POST" action="/author/store" id="form-author">
     @csrf
     <div class="form-group">
       <label for="firstname">{{ __('Имя') }}</label>
