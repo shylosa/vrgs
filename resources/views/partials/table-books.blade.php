@@ -7,7 +7,7 @@
   <i class="fas fa-plus-circle"></i><span>{{ __('Добавить книгу') }}</span>
 </button>
 
-<table class="table table-hover">
+<table class="table table-hover display" id="table-books">
   <thead>
   <tr>
     <th scope="col">#</th>
@@ -48,7 +48,7 @@
   @endforeach
   </tbody>
 </table>
-{{ $books->links() }}
+
 
 <!-- Modal -->
 <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">

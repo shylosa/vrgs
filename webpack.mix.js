@@ -1,5 +1,13 @@
 const mix = require('laravel-mix');
 
+mix.webpackConfig({
+    module: {
+        rules: [
+            { parser: { amd: false } }
+        ]
+    }
+});
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -14,6 +22,7 @@ const mix = require('laravel-mix');
 mix.styles([
     'resources/assets/front/css/bootstrap.min.css',
     'resources/assets/front/css/all.min.css',
+    'resources/assets/front/css/dataTables.bootstrap4.css',
     'resources/assets/front/css/style.css'
 ],'public/css/front.css');
 
@@ -22,6 +31,8 @@ mix.scripts([
     'resources/assets/front/js/popper.min.js',
     'resources/assets/front/js/bootstrap.min.js',
     'resources/assets/front/js/all.min.js',
+    'resources/assets/front/js/jquery.dataTables.min.js',
+    'resources/assets/front/js/dataTables.bootstrap4.js',
     'resources/assets/front/js/scripts.js',
 ], 'public/js/front.js');
 

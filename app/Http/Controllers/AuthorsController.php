@@ -24,7 +24,8 @@ class AuthorsController extends Controller
      */
     public function index(Request $request)
     {
-        $authors = DB::table('authors')->paginate(Controller::ON_PAGE);
+        //$authors = DB::table('authors')->paginate(Controller::ON_PAGE);
+        $authors = Author::all();
         $startRow = AppModel::getPageNumber($request);
         $fields = [
             'authors' => $authors,

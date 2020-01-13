@@ -36,7 +36,7 @@
   @endforeach
   </tbody>
 </table>
-{{ $authors->links() }}
+
 
 <!-- Modal -->
 <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">

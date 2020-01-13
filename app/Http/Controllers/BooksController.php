@@ -24,7 +24,8 @@ class BooksController extends Controller
      */
     public function index(Request $request)
     {
-        $books = Book::paginate(Controller::ON_PAGE);
+        //$books = Book::paginate(Controller::ON_PAGE);
+        $books = Book::all();
         $startRow = AppModel::getPageNumber($request);
         $authors = Author::all();
         $fields = [
