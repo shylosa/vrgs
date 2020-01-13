@@ -22,6 +22,7 @@ Route::get('/book/add', 'BooksController@create')->name('book.create');
 Route::post('/book/add', 'BooksController@create')->name('book.create');
 Route::get('/book/edit/{id}', 'BooksController@edit')->name('book.edit');
 Route::get('/book/delete/{id}', 'BooksController@delete')->name('book.delete');
+Route::post('/book/store', 'BooksController@store')->name('store.store');
 
 Route::get('/authors', 'AuthorsController@index')->name('authors');
 Route::get('/author/add', 'AuthorsController@create')->name('author.create');

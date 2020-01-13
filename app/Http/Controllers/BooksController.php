@@ -2,30 +2,108 @@
 
 namespace App\Http\Controllers;
 
+use App\AppModel;
+use App\Book;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Validator;
 
 class BooksController extends Controller
 {
-    public function index()
-    {
-        $books = DB::table('books')->paginate(Controller::ON_PAGE);
+    private static $currentBook = ['title' => '', 'description' => '', 'published_at' => ''];
 
-        return view('books.index', ['books' => $books]);
+    /**
+     * Show books's page
+     *
+     * @param Request $request
+     * @return Factory|View
+     */
+    public function index(Request $request)
+    {
+        $books = Book::paginate(Controller::ON_PAGE);
+        $startRow = AppModel::getPageNumber($request);
+        $fields = [
+            'books' => $books,
+            'startRow' => $startRow,
+            'currentBook' => self::$currentBook,
+            'id' => ''];
+
+        return ($request->ajax()) ?
+             view('partials.table-books', $fields) :
+             view('books.index', $fields);
     }
 
-    public function create()
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @return Factory|View
+     */
+    public function edit(Request $request)
     {
-        return redirect('/books');
+        //Edit book
+        if ($request->id) {
+            $id = $request->id;
+            $currentBook = Book::find($id)->toArray();
+
+            return view('partials.form-book', ['currentBook' => $currentBook, 'id' => $id]);
+        }
+
+        return null;
     }
 
-    public function edit()
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function delete(Request $request, $id)
     {
-        return redirect('/books');
+        //Delete records in a staging table
+        Book::find($id)->authors()->detach();
+        //Delete author
+        Book::find($id)->remove();
+
+        return redirect()->back()->with('status', 'Book deleted!');
     }
 
-    public function delete()
+    /**
+     * Save form data in database
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request)
     {
-        return redirect('/books');
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'published_at' => 'integer|digits:4|nullable'
+        ]);
+
+        //Validation OK
+        if (!$validator->fails()) {
+            //Update existing book
+            if ($request->book_id) {
+                $book = Book::find($request->book_id);
+                $book->edit($request->all());
+                $book->uploadImage($request->file('image'));
+
+                return redirect()->back()->with('status', 'Book updated!');
+            }
+            //Create new book
+            $book = Book::add($request->all());
+            $book->uploadImage($request->file('image'));
+
+            return redirect()->back()->with('status', 'Book add!');
+        }
+
+        //Validation failed
+        return redirect()->back()->withErrors($validator);
     }
 }

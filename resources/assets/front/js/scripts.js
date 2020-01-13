@@ -1,10 +1,10 @@
-$(function(){
+$(function () {
     removeAlerts();
-    var jsContent =$('#js-content');
+    var jsContent = $('#js-content');
 
     //Change title modal window
     $('.add').on('click', function (event) {
-        $('#ModalLabel').text('Добавление автора');
+        $('#ModalLabel').text('Добавление записи');
     });
 
     //Add and edit author's modal form
@@ -17,26 +17,40 @@ $(function(){
         }).done(function (response) {
             var modalWindow = $('.modal-body');
             modalWindow.html(response);
-            $('#ModalLabel').text('Изменение автора');
+            $('#ModalLabel').text('Изменение записи');
             $('#Modal').modal('show');
         });
     });
 
     //Ajax send modal form
-   jsContent.on('submit', 'form', function (event) {
+    jsContent.on('submit', 'form', function (event) {
+        event.preventDefault();
+        var uform = $(this);
 
-        if($(this).attr('id') === 'form-author') {
-            event.preventDefault();
-            var uform = $(this);
+        if(uform.attr('id') === 'form-author') {
+
+        $.ajax({
+            type: uform.attr('method'),
+            url: uform.attr('action'),
+            data: uform.serialize()
+        }).done(function (response) {
+            $('#js-content').html(response);
+            removeAlerts();
+            removeModal();
+        });
+        } else if (uform.attr('id') === 'form-book') {
+            formData = new FormData(uform[0]);
 
             $.ajax({
                 type: uform.attr('method'),
                 url: uform.attr('action'),
-                data: uform.serialize()
+                data: formData,
+                processData: false,
+                contentType: false
             }).done(function (response) {
                 $('#js-content').html(response);
                 removeAlerts();
-                $('.modal-backdrop').remove();
+                removeModal();
             });
         }
     });
@@ -46,4 +60,9 @@ $(function(){
 //Remove alerts messages from page
 function removeAlerts() {
     $('.alert, .text-danger, .invalid-feedback').delay(1000).fadeOut(1000);
+}
+//Remove modal window overflow
+function removeModal() {
+    $('.modal-backdrop').remove();
+    $('body').removeClass('modal-open');
 }

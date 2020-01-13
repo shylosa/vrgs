@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class Book extends AppModel
 {
@@ -41,12 +44,15 @@ class Book extends AppModel
      * Add book
      *
      * @param $fields
+     * @return Book
      */
-    public function addBook($fields): void
+    public static function add($fields)
     {
         $book = new static();
         $book->fill($fields);
         $book->save();
+
+        return $book;
     }
 
     /**
@@ -54,7 +60,7 @@ class Book extends AppModel
      *
      * @param $fields
      */
-    public function editBook($fields): void
+    public function edit($fields): void
     {
         $this->fill($fields);
         $this->save();
@@ -108,6 +114,59 @@ class Book extends AppModel
     {
         if ($this->image !== null) {
             Storage::delete('uploads/' . $this->image);
+        }
+    }
+
+    /**
+     * Upload image
+     *
+     * @param $image
+     */
+    public function uploadImage($image)
+    {
+        if ($image === null) {
+            return;
+        }
+
+        $this->removeImage();
+        $filename = Str::random(10) . '.' . mb_strtolower($image->getClientOriginalExtension());
+        $image = Image::make($image)->resize(800, null, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $path = 'uploads';
+
+        // Check for the existence of a directory and create it if necessary
+        $this->checkDirectory($path);
+        $image->save($path . '/' . $filename);
+        $this->image = $filename;
+        $this->save();
+    }
+
+    /**
+     * Getting a image belonging to the book
+     *
+     * @return string
+     */
+    public function getImage(): string
+    {
+        if ($this->image === null) {
+            return '/images/no-image.png';
+        }
+
+        return '/uploads/' . $this->image;
+    }
+
+    /**
+     * Check for a directory
+     *
+     * @param $directory
+     */
+    public function checkDirectory($directory)
+    {
+        $path = public_path() . '/' . $directory;
+
+        if (!File::isDirectory($path)) {
+            File::makeDirectory($path, 0777, true, true);
         }
     }
 }
