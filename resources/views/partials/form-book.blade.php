@@ -18,6 +18,15 @@
              value="{{ old('published_at', $currentBook['published_at']) }}" placeholder="{{ __('Введите год издания') }}">
     </div>
     <div class="form-group">
+      <label for="authors">{{ __('Автор') }}</label>
+      <select class="custom-select" multiple id="authors" name="authors[]">
+        @foreach($authors as $author)
+          <option value="{{ $author->id }}" {{ (in_array($author->id, $currentAuthors, true)) ? 'selected' : '' }}>
+            {{ $author->getFullname() }}</option>
+        @endforeach
+      </select>
+    </div>
+    <div class="form-group">
       <div>
         <label for="image">Обложка</label>
       </div>

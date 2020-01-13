@@ -18,7 +18,8 @@ class CreateAuthorsTable extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('patronymic')->nullable();
-            $table->timestamps();
+            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

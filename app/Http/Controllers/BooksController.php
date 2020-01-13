@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AppModel;
 use App\Book;
+use App\Author;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,11 +26,14 @@ class BooksController extends Controller
     {
         $books = Book::paginate(Controller::ON_PAGE);
         $startRow = AppModel::getPageNumber($request);
+        $authors = Author::all();
         $fields = [
             'books' => $books,
             'startRow' => $startRow,
             'currentBook' => self::$currentBook,
-            'id' => ''];
+            'currentAuthors' => [],
+            'id' => '',
+            'authors' => $authors];
 
         return ($request->ajax()) ?
              view('partials.table-books', $fields) :
@@ -47,9 +51,17 @@ class BooksController extends Controller
         //Edit book
         if ($request->id) {
             $id = $request->id;
-            $currentBook = Book::find($id)->toArray();
+            $book = Book::find($id);
+            $currentBook = $book->toArray();
+            $currentAuthors = $book->getAuthors();
+            $authors = Author::all();
 
-            return view('partials.form-book', ['currentBook' => $currentBook, 'id' => $id]);
+            return view('partials.form-book', [
+                'currentBook' => $currentBook,
+                'currentAuthors' => $currentAuthors,
+                'id' => $id,
+                'authors' => $authors
+            ]);
         }
 
         return null;
@@ -93,12 +105,14 @@ class BooksController extends Controller
                 $book = Book::find($request->book_id);
                 $book->edit($request->all());
                 $book->uploadImage($request->file('image'));
+                $book->setAuthors($request->authors);
 
                 return redirect()->back()->with('status', 'Book updated!');
             }
             //Create new book
             $book = Book::add($request->all());
             $book->uploadImage($request->file('image'));
+            $book->setAuthors($request->authors);
 
             return redirect()->back()->with('status', 'Book add!');
         }

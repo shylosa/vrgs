@@ -19,7 +19,8 @@ class CreateBooksTable extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->integer('published_at');
-            $table->timestamps();
+            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

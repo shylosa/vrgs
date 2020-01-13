@@ -17,7 +17,8 @@ class CreateBooksAuthorsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('book_id');
             $table->integer('author_id');
-            $table->timestamps();
+            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

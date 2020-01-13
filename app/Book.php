@@ -66,33 +66,40 @@ class Book extends AppModel
         $this->save();
     }
 
+    /*    public function setAuthors(array $authors): void
+        {
+            if ($authors === null) {
+                return;
+            }
+            foreach ($authors as $key => $author) {
+                if ($author) {
+                    Author::updateOrCreate(['author' => $author]);
+                }
+            }
+        }*/
+
     /**
      * Set authors for current book
      *
-     * @param array $authors
+     * @param $ids
      */
-    public function setAuthors(array $authors): void
+    public function setAuthors($ids): void
     {
-        if ($authors === null) {
+        if ($ids === null) {
             return;
         }
-        foreach ($authors as $key => $author) {
-            if ($author) {
-                Author::updateOrCreate(['author' => $author]);
-            }
-        }
+
+        $this->authors()->sync($ids);
     }
 
     /**
      * Get authors
      *
-     * @return string
+     * @return array
      */
     public function getAuthors()
     {
-        return (!$this->authors->isEmpty())
-            ?   implode(', ', $this->authors->pluck('author')->all())
-            : 'Authors does not exist!';
+        return (!$this->authors->isEmpty()) ? $this->authors->pluck('id')->all() : [];
     }
 
     /**

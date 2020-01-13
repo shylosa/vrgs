@@ -64,5 +64,7 @@ function removeAlerts() {
 //Remove modal window overflow
 function removeModal() {
     $('.modal-backdrop').remove();
-    $('body').removeClass('modal-open');
+    var bd = $('body');
+    bd.removeClass('modal-open');
+    bd.removeAttr('style');
 }
