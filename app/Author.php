@@ -108,6 +108,6 @@ class Author extends AppModel
      */
     public function getFullname()
     {
-        return $this->getFirstame() . ' ' . $this->getLastname() . ' ' . $this->getPatronymic();
+        return $this->getLastname() . ' ' . $this->getFirstame() . ' ' . $this->getPatronymic();
     }
 }

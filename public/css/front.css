@@ -313,6 +313,17 @@ section{
     padding: 70px 0;
 }
 
+h1{
+    color: #5f3f3f;
+    font-size: 50px;
+    font-weight: 700;
+    font-family: 'Arsenal', sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    width: 100%;
+    margin: auto;
+}
+
 h2{
     font-size: 40px;
     font-weight: 400;
@@ -322,9 +333,13 @@ h2{
 }
 
 h3{
+    color: #5f3f3f;
     font-size: 30px;
-    font-weight: 400;
+    font-weight: 700;
     font-family: 'Arsenal', sans-serif;
+    text-align: center;
+    width: 100%;
+    margin: auto;
 }
 
 h4{
@@ -354,7 +369,7 @@ div.nav {
 }
 
 .main-header .navbar-brand {
-    font-size: 41px;
+    font-size: 40px;
 }
 
 .main-header .navbar-toggler {
@@ -383,6 +398,14 @@ div.nav {
 
 .main-header .top-menu {
     background: rgba(0, 0, 0, 0.3);
+}
+
+.navbar-nav .nav-item {
+    padding-left: 20px;
+}
+
+div.title {
+    padding-bottom: 70px;
 }
 
 /* =============================.content============================== */

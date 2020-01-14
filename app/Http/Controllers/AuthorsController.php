@@ -83,10 +83,12 @@ class AuthorsController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'firstname' =>'required|alpha|min:3',
-            'lastname' =>'required|alpha',
+            'firstname' =>'required|alpha',
+            'lastname' =>'required|alpha|min:3',
             'patronymic' => 'alpha|nullable'
         ]);
+        //Save old input data in session
+        $request->flash();
 
         //Validation OK
         if (!$validator->fails()) {

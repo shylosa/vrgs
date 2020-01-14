@@ -99,7 +99,7 @@ class Book extends AppModel
      */
     public function getAuthors()
     {
-        return (!$this->authors->isEmpty()) ? $this->authors->pluck('id')->all() : [];
+        return (!$this->authors->isEmpty()) ? $this->authors->pluck('id', 'id')->all() : [];
     }
 
     /**

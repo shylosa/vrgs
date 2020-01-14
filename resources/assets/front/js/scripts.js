@@ -4,13 +4,16 @@ $(function () {
     var jsContent = $('#js-content');
 
     //Change title modal window
-    $('.add').on('click', function (event) {
+    jsContent.on('click', '.add', function (event) {
         $('#ModalLabel').text('Добавление записи');
+        $('form :input').val('');
+        removeValidationErrors();
     });
 
-    //Add and edit author's modal form
+    //Add and edit modal form
     jsContent.on('click', '.js-link-edit', function (event) {
         event.preventDefault();
+        removeValidationErrors();
 
         $.ajax({
             type: 'GET',
@@ -36,8 +39,9 @@ $(function () {
             data: uform.serialize()
         }).done(function (response) {
             $('#js-content').html(response);
-            removeAlerts();
             removeModal();
+            removeAlerts();
+            showModal();
             datatableFormat();
         });
         } else if (uform.attr('id') === 'form-book') {
@@ -52,8 +56,9 @@ $(function () {
                 contentType: false
             }).done(function (response) {
                 $('#js-content').html(response);
-                removeAlerts();
                 removeModal();
+                removeAlerts();
+                showModal();
                 datatableFormat();
             });
         }
@@ -63,7 +68,20 @@ $(function () {
 
 //Remove alerts messages from page
 function removeAlerts() {
-    $('.alert, .text-danger, .invalid-feedback').delay(1000).fadeOut(1000);
+    var alerts = $('.alert, .invalid-feedback');
+    alerts.delay(1000).fadeOut(1000);
+}
+
+//Remove old validation errors
+function removeValidationErrors() {
+    $('.text-danger').remove();
+}
+
+//Show modal window with validation errors
+function showModal() {
+    if ($('span').hasClass('text-danger')) {
+        $('#Modal').modal('show');
+    }
 }
 
 //Remove modal window overflow
@@ -76,7 +94,9 @@ function removeModal() {
 
 //Datatable pagination
 function datatableFormat() {
-    var t = $('.table').DataTable({
+    var table = $('.table');
+    var rows = targetRows(table);
+    var t = table.DataTable({
         //Quantity records on page
         "pageLength": 15,
         //Array with page quantity options
@@ -115,18 +135,10 @@ function datatableFormat() {
         "columnDefs": [{
             "searchable": false,
             "orderable": false,
-            "targets": 0
-        }, {
-            "searchable": false,
-            "orderable": false,
-            "targets": 3
-        }, {
-            "searchable": false,
-            "orderable": false,
-            "targets": 4
+            "targets": rows
         }],
         //Set default sort options for row = 2 (numeration starts from 0)
-        "order": [[2, 'asc']]
+        "order": [[1, 'asc']]
     });
     //Renumbering table rows when sorting and searching
     t.on( 'order.dt search.dt', function () {
@@ -134,4 +146,16 @@ function datatableFormat() {
             cell.innerHTML = i+1;
         });
     }).draw();
+}
+//Return rows number with disabled search and sorting
+function targetRows(table) {
+    var tableId = table.attr('id');
+    switch (tableId) {
+        case 'table-authors':
+            return [0, 3, 4];
+        case 'table-books':
+            return [0, 2, 3, 4, 6];
+        case 'table-catalog':
+            return [0, 3, 4];
+    }
 }

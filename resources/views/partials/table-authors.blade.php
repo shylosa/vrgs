@@ -1,3 +1,4 @@
+<h1>{{ __('Авторы') }}</h1>
 @if(session('status'))
   <div class="alert alert-success">
     {{ session('status') }}
@@ -7,12 +8,12 @@
   <i class="fas fa-plus-circle"></i><span>{{ __('Добавить автора') }}</span>
 </button>
 
-<table class="table table-hover">
+<table class="table table-hover" id="table-authors">
   <thead>
   <tr>
     <th scope="col">#</th>
-    <th scope="col">{{ __('Имя') }}</th>
     <th scope="col">{{ __('Фамилия') }}</th>
+    <th scope="col">{{ __('Имя') }}</th>
     <th scope="col">{{ __('Отчество') }}</th>
     <th scope="col">{{ __('Действие') }}</th>
   </tr>
@@ -21,8 +22,8 @@
   @foreach($authors as $key => $author)
     <tr>
       <th scope="row">{{ $startRow + $key + 1 }}</th>
-      <td>{{ $author->firstname }}</td>
       <td>{{ $author->lastname }}</td>
+      <td>{{ $author->firstname }}</td>
       <td>{{ $author->patronymic }}</td>
       <td>
         <a href="{{ route('author.edit', $author->id) }}" class="js-link-edit">
@@ -43,7 +44,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="ModalLabel">{{ __('Добавление автора') }}</h5>
+        <h5 class="modal-title" id="ModalLabel">{{ __('Добавление записи') }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

@@ -24,17 +24,17 @@ class BooksController extends Controller
      */
     public function index(Request $request)
     {
-        //$books = Book::paginate(Controller::ON_PAGE);
         $books = Book::all();
         $startRow = AppModel::getPageNumber($request);
-        $authors = Author::all();
+        $authors = Author::all()->sortBy('lastname');
         $fields = [
             'books' => $books,
+            'authors' => $authors,
             'startRow' => $startRow,
             'currentBook' => self::$currentBook,
             'currentAuthors' => [],
-            'id' => '',
-            'authors' => $authors];
+            'id' => ''
+        ];
 
         return ($request->ajax()) ?
              view('partials.table-books', $fields) :
@@ -55,7 +55,7 @@ class BooksController extends Controller
             $book = Book::find($id);
             $currentBook = $book->toArray();
             $currentAuthors = $book->getAuthors();
-            $authors = Author::all();
+            $authors = Author::all()->sortBy('lastname');
 
             return view('partials.form-book', [
                 'currentBook' => $currentBook,
@@ -96,8 +96,10 @@ class BooksController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'published_at' => 'integer|digits:4|nullable'
+            'published_at' => 'integer|digits:4'
         ]);
+        //Save old input data in session
+        $request->flash();
 
         //Validation OK
         if (!$validator->fails()) {
