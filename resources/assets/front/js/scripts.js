@@ -3,14 +3,25 @@ $(function () {
     datatableFormat();
     var jsContent = $('#js-content');
 
-    //Change title modal window
-    jsContent.on('click', '.add', function (event) {
-        $('#ModalLabel').text('Добавление записи');
+    //Form modal add
+    jsContent.on('click', '.js-link-add', function (event) {
+        event.preventDefault();
+//        removeValidationErrors();
+
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr('href')
+        }).done(function (response) {
+            $('.modal-body').html(response);
+            $('#ModalLabel').text('Добавление записи');
+            $('#Modal').modal('show');
+        });
+        /*
         $('form :input').val('');
-        removeValidationErrors();
+        removeValidationErrors();*/
     });
 
-    //Add and edit modal form
+    //Form modal edit
     jsContent.on('click', '.js-link-edit', function (event) {
         event.preventDefault();
         removeValidationErrors();
@@ -19,8 +30,7 @@ $(function () {
             type: 'GET',
             url: $(this).attr('href')
         }).done(function (response) {
-            var modalWindow = $('.modal-body');
-            modalWindow.html(response);
+            $('.modal-body').html(response);
             $('#ModalLabel').text('Изменение записи');
             $('#Modal').modal('show');
         });
@@ -32,22 +42,22 @@ $(function () {
         var uform = $(this);
 
         if(uform.attr('id') === 'form-author') {
-
-        $.ajax({
-            type: uform.attr('method'),
-            url: uform.attr('action'),
-            data: uform.serialize()
-        }).done(function (response) {
-            $('#js-content').html(response);
-            removeModal();
-            removeAlerts();
-            showModal();
-            datatableFormat();
-        });
+            $.ajax({
+                type: uform.attr('method'),
+                url: uform.attr('action'),
+                data: uform.serialize()
+            }).done(function (response) {
+                $('#js-content').html(response);
+                //removeModal();
+                removeAlerts();
+                //showModal();
+                datatableFormat();
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                $('#Modal').modal('show');
+            })
         } else if (uform.attr('id') === 'form-book') {
             //Ajax method for upload file
             formData = new FormData(uform[0]);
-
             $.ajax({
                 type: uform.attr('method'),
                 url: uform.attr('action'),
@@ -56,9 +66,9 @@ $(function () {
                 contentType: false
             }).done(function (response) {
                 $('#js-content').html(response);
-                removeModal();
+                //removeModal();
                 removeAlerts();
-                showModal();
+                //showModal();
                 datatableFormat();
             });
         }

@@ -4,9 +4,9 @@
     {{ session('status') }}
   </div>
 @endif
-<button type="button" class="btn btn-link add" data-toggle="modal" data-target="#Modal">
+<a href="{{ route('author.add') }}" class="js-link-add" data-toggle="modal" data-target="#Modal">
   <i class="fas fa-plus-circle"></i><span>{{ __('Добавить автора') }}</span>
-</button>
+</a>
 
 <table class="table table-hover" id="table-authors">
   <thead>
@@ -21,7 +21,7 @@
   <tbody>
   @foreach($authors as $key => $author)
     <tr>
-      <th scope="row">{{ $startRow + $key + 1 }}</th>
+      <th scope="row"></th>
       <td>{{ $author->lastname }}</td>
       <td>{{ $author->firstname }}</td>
       <td>{{ $author->patronymic }}</td>
@@ -29,7 +29,8 @@
         <a href="{{ route('author.edit', $author->id) }}" class="js-link-edit">
           <i class="fas fa-pencil-alt" title="{{ __('Изменить запись') }}"></i>
         </a>
-        <a href="{{ route('author.delete', $author->id) }}" class="js-link-delete" onclick="return confirm('Аre you sure?')">
+        <a href="{{ route('author.delete', $author->id) }}" class="js-link-delete"
+           onclick="return confirm('Аre you sure?')">
           <i class="fas fa-times" title="{{ __('Удалить запись') }}"></i>
         </a>
       </td>
@@ -37,7 +38,6 @@
   @endforeach
   </tbody>
 </table>
-
 
 <!-- Modal -->
 <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
@@ -49,9 +49,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <!-- .modal-body -->
-    @include('partials.form-author')
-    <!-- ./modal-body -->
+      <div class="modal-body">
+        <!-- form-->
+        <!-- ./form-->
+      </div>
     </div>
   </div>
 </div>

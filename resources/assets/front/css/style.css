@@ -205,20 +205,27 @@ div.title {
     color: #0056b3;
 }
 
-button.add {
+a.js-link-add {
     display: block;
     padding-bottom: 15px;
     color: #5f3f3f;
     font-size: 18px;
     width: 100%;
     text-align: end;
+    vertical-align: center;
 }
 
-button.add:hover {
+a.js-link-add span {
+    color: #000000;
+    padding-left: 5px;
+}
+
+a.js-link-add:hover {
     text-decoration: none;
+    color: #0056b3;;
 }
 
-button.add span {
+button.js-link-add span {
     color: #343a40;
     padding-left: 5px;
 }

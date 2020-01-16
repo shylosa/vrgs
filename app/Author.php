@@ -35,7 +35,7 @@ class Author extends AppModel
     }
 
     /**
-     * Add author
+     * Add entity in Storage.
      *
      * @param $fields
      * @return Author
@@ -50,7 +50,7 @@ class Author extends AppModel
     }
 
     /**
-     * Edit existing author
+     * Edit entity in Storage.
      *
      * @param $fields
      */
@@ -61,7 +61,7 @@ class Author extends AppModel
     }
 
     /**
-     * Remove existing author
+     * Remove entity from Storage.
      */
     public function remove(): void
     {

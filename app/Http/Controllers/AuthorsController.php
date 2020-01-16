@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AppModel;
 use App\Author;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -14,8 +15,6 @@ use Illuminate\View\View;
 
 class AuthorsController extends Controller
 {
-    private static $currentAuthor = ['firstname' => '', 'lastname' => '', 'patronymic' => ''];
-
     /**
      * Show author's page
      *
@@ -24,14 +23,8 @@ class AuthorsController extends Controller
      */
     public function index(Request $request)
     {
-        //$authors = DB::table('authors')->paginate(Controller::ON_PAGE);
         $authors = Author::all();
-        $startRow = AppModel::getPageNumber($request);
-        $fields = [
-            'authors' => $authors,
-            'startRow' => $startRow,
-            'currentAuthor' => self::$currentAuthor,
-            'id' => ''];
+        $fields = ['authors' => $authors];
 
         return ($request->ajax()) ?
             view('partials.table-authors', $fields) :
@@ -39,43 +32,18 @@ class AuthorsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for creating a new resource.
      *
-     * @param Request $request
      * @return Factory|View
      */
-    public function edit(Request $request)
+    public function create()
     {
-        //Edit author
-        if ($request->id) {
-            $id = $request->id;
-            $currentAuthor = Author::find($id)->toArray();
-
-            return view('partials.form-author', ['currentAuthor' => $currentAuthor, 'id' => $id]);
-        }
-
-        return null;
+        $author = new Author;
+        return view('partials.form-author', ['author' => $author]);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return RedirectResponse
-     */
-    public function delete(Request $request, $id)
-    {
-        //Delete records in linked table
-        Author::find($id)->books()->detach();
-        //Delete author
-        Author::find($id)->remove();
-
-        return redirect()->back()->with('status', 'Author deleted!');
-    }
-
-    /**
-     * Save form data in database
+     * Store a newly created resource in storage.
      *
      * @param Request $request
      * @return RedirectResponse
@@ -89,23 +57,68 @@ class AuthorsController extends Controller
         ]);
         //Save old input data in session
         $request->flash();
-
         //Validation OK
         if (!$validator->fails()) {
-            //Update existing author
-            if ($request->author_id) {
-                $author = Author::find($request->author_id);
-                $author->edit($request->all());
-
-                return redirect()->back()->with('status', 'Author updated!');
-            }
-            //Create new author
             Author::add($request->all());
-
             return redirect()->back()->with('status', 'Author add!');
         }
-
         //Validation failed
-        return redirect()->back()->withErrors($validator);
+        return redirect(route('author.add'))->withErrors($validator);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return Factory|View
+     */
+    public function edit($id)
+    {
+        //Edit author
+        $author = Author::find($id);
+
+        return view('partials.form-author', ['author' => $author]);
+    }
+
+    /**
+     * Update the specified resource in storage
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'firstname' =>'required|alpha',
+            'lastname' =>'required|alpha|min:3',
+            'patronymic' => 'alpha|nullable'
+        ]);
+        //Save old input data in session
+        $request->flash();
+        //Validation OK
+        if (!$validator->fails()) {
+            $author = Author::find($id);
+            $author->edit($request->all());
+
+            return redirect()->back()->with('status', 'Author updated!');
+        }
+        //Validation failed
+        return response()->json(['errors' => $validator->errors()->all()], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function delete($id)
+    {
+        //Delete records in linked table
+        Author::find($id)->books()->detach();
+        //Delete author
+        Author::find($id)->remove();
+
+        return redirect()->back()->with('status', 'Author deleted!');
     }
 }
