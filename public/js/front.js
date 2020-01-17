@@ -376,7 +376,7 @@ $(function () {
     datatableFormat();
     var jsContent = $('#js-content');
 
-    //Form modal add
+    //Add modal form
     jsContent.on('click', '.js-link-add', function (event) {
         event.preventDefault();
 //        removeValidationErrors();
@@ -394,10 +394,10 @@ $(function () {
         removeValidationErrors();*/
     });
 
-    //Form modal edit
+    //Edit modal form
     jsContent.on('click', '.js-link-edit', function (event) {
         event.preventDefault();
-        removeValidationErrors();
+        //removeValidationErrors();
 
         $.ajax({
             type: 'GET',
@@ -409,7 +409,7 @@ $(function () {
         });
     });
 
-    //Ajax send modal form
+    //Send modal form
     jsContent.on('submit', 'form', function (event) {
         event.preventDefault();
         var uform = $(this);
@@ -418,15 +418,28 @@ $(function () {
             $.ajax({
                 type: uform.attr('method'),
                 url: uform.attr('action'),
-                data: uform.serialize()
+                data: uform.serialize(),
+                dataType: 'json'
             }).done(function (response) {
                 $('#js-content').html(response);
                 //removeModal();
                 removeAlerts();
                 //showModal();
                 datatableFormat();
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                $('#Modal').modal('show');
+            }).fail(function (response, status) {
+                //If response has validation errors
+                if (response.status === 422) {
+                    $.each(response.responseJSON.errors, function(index, value) {
+                        var field = $("input[name='"+index+"']" );
+                        //Display all errors for each field
+                        value.forEach(function (err) {
+                            var errorMessage = document.createElement('span');
+                            errorMessage.setAttribute('class', 'form-text text-danger');
+                            errorMessage.innerHTML = err;
+                            field.parent().append(errorMessage);
+                        });
+                   });
+                }
             })
         } else if (uform.attr('id') === 'form-book') {
             //Ajax method for upload file
@@ -437,7 +450,7 @@ $(function () {
                 data: formData,
                 processData: false,
                 contentType: false
-            }).done(function (response) {
+            }).always(function (response, status) {
                 $('#js-content').html(response);
                 //removeModal();
                 removeAlerts();

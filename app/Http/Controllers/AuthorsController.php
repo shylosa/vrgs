@@ -12,6 +12,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthorsController extends Controller
 {
@@ -46,7 +47,7 @@ class AuthorsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function store(Request $request)
     {
@@ -63,7 +64,8 @@ class AuthorsController extends Controller
             return redirect()->back()->with('status', 'Author add!');
         }
         //Validation failed
-        return redirect(route('author.add'))->withErrors($validator);
+        //return redirect(route('author.add'))->withErrors($validator);
+        return response()->json(['errors' => $validator->errors()->toArray()], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -74,6 +76,7 @@ class AuthorsController extends Controller
      */
     public function edit($id)
     {
+
         //Edit author
         $author = Author::find($id);
 
@@ -84,7 +87,8 @@ class AuthorsController extends Controller
      * Update the specified resource in storage
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @param $id
+     * @return JsonResponse|RedirectResponse
      */
     public function update(Request $request, $id)
     {
@@ -103,7 +107,7 @@ class AuthorsController extends Controller
             return redirect()->back()->with('status', 'Author updated!');
         }
         //Validation failed
-        return response()->json(['errors' => $validator->errors()->all()], Response::HTTP_BAD_REQUEST);
+        return response()->json(['errors' => $validator->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**
